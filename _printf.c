@@ -1,32 +1,42 @@
 #include "main.h"
-
 /**
- * _printf - produces output according to a format
- * @format: a character string
+ *_printf - function to print anything
+ *@format: types of argument passed to the function
  *
- * Return: the number of characters printed
+ *Return: number of characters printed
  */
 int _printf(const char *format, ...)
 {
-	pt_fmt pt_format[] = {
-		{"c", print_char},
-		{"s", print_string},
-		{"d", print_digit},
-		{"i", print_digit},
-		{"%", print_percent},
-		{"b", print_binary_conv},
-		{"u", print_unsig_int},
-		{"o", print_oct},
-		{"x", print_hex_low},
-		{"X", print_hex_upper},
-		{NULL, NULL}
-	};
+	int check = 0, i;
+	va_list parameters;
+	int (*func)(va_list);
 
-	va_list valist;
-	int num_ch = 0;
-
-	va_start(valist, format);
-	num_ch = get_print(format, valist, pt_format);
-	va_end(valist);
-	return (num_ch);
+	va_start(parameters, format);
+	if (format == NULL)
+		return (-1);
+	for (i = 0; format[i]; i++)
+	{
+		if (format[i] == '%')
+		{
+			i++;
+			if (!(format[i]))
+				return (-1);
+			func = get_func(format[i]);
+			if (func == NULL)
+			{
+				_putchar('%');
+				_putchar(format[i]);
+				check += 2;
+			}
+			else
+				check += func(parameters);
+		}
+		else
+		{
+			_putchar(format[i]);
+			check++;
+		}
+	}
+	va_end(parameters);
+	return (check);
 }
