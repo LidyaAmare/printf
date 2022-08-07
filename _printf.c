@@ -7,59 +7,27 @@
  * specifiers contained into fmt
  * Return: length of the formatted output string
  */
-int op_checker(char c, va_list ap)
+int _printf(const char *format, ...)
 {
-	int i;
-	func_t ops[] = {
+	pt_fmt pt_format[] = {
 		{"c", print_char},
 		{"s", print_string},
-		{"d", print_int},
-		{"i", print_int},
+		{"d", print_digit},
+		{"i", print_digit},
 		{"%", print_percent},
-		{"b", print_binary},
+		{"b", print_binary_conv},
+		{"u", print_unsig_int},
+		{"o", print_oct},
+		{"x", print_hex_low},
+		{"X", print_hex_upper},
 		{NULL, NULL}
 	};
 
-	for (i = 0; ops[i].op != NULL; i++)
-	{
-		if (c == *(ops[i].op))
-		{
-			return (ops[i].f(ap));
-		}
-	}
-	return (-1);
-}
+	va_list valist;
+	int num_ch = 0;
 
-/**
- * _printf - Printf function
- * @format: The format of the string
- *
- * Return: The number of characters printed
- */
-int _printf(const char *format, ...)
-{
-	va_list ap;
-	int i = 0, ret = 0;
-
-	if (format == NULL)
-		return (-1);
-
-	va_start(ap, format);
-	while (format[i] != '\0')
-	{
-		if (format[i] == '%')
-		{
-			i++;
-			ret += op_checker(format[i], ap);
-		}
-		else
-		{
-			_putchar(format[i]);
-			ret++;
-		}
-		i++;
-	}
-	va_end(ap);
-
-	return (ret);
+	va_start(valist, format);
+	num_ch = get_print(format, valist, pt_format);
+	va_end(valist);
+	return (num_ch);
 }
