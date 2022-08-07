@@ -19,8 +19,6 @@ int (*get_func(const char a))(va_list)
 		{'b', print_binary},
 		{'u', print_unint},
 		{'o', print_octal},
-		{ 'x', get_hex },
-		{ 'X', get_hex_upper },
 		{'R', rot_13},
 		{'\0', NULL}
 	};
